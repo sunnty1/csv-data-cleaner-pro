@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 
 print("CSV Cleaner Pro Started")
@@ -6,6 +7,17 @@ file = input(
     "Enter CSV file name: "
 )
 
+while True:
+    file = input(
+        "Enter CSV file name: "
+    )
+
+    if os.path.exists(file):
+        break
+
+    print(
+        "File not found. Try again."
+    )
 df = pd.read_csv(file)
 
 before = len(df)
@@ -28,7 +40,8 @@ df["Country"] = df["Country"].str.title()
 after = len(df)
 
 df.to_csv(
-    "cleaned_customers.csv",
+  output_file = "cleaned_" + file  df.to_csv(
+    output_file,
     index=False
 )
 
@@ -44,7 +57,13 @@ with open(
 ) as f:
     f.write(report)
 
-print("Cleaning completed")
+print("CSV cleaned successfully!")
+print("Report generated.")
 print("Saved:")
 print("- cleaned_customers.csv")
 print("- report.txt")
+print()
+print("Summary:")
+print(f"Rows before: {before}")
+print(f"Rows after: {after}")
+print(f"Removed: {before-after}")
