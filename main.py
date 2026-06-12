@@ -2,7 +2,9 @@ import pandas as pd
 
 print("CSV Cleaner Pro Started")
 
-file = "dirty_customers.csv"
+file = input(
+    "Enter CSV file name: "
+)
 
 df = pd.read_csv(file)
 
