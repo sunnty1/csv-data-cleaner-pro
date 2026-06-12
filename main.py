@@ -1,69 +1,123 @@
 import os
 import pandas as pd
 
-print("CSV Cleaner Pro Started")
 
-file = input(
-    "Enter CSV file name: "
-)
+print("=" * 40)
+print("CSV DATA CLEANER PRO")
+print("=" * 40)
 
+
+# Dosya al
 while True:
-    file = input(
-        "Enter CSV file name: "
-    )
+    file = input("\nEnter CSV file name: ").strip()
 
     if os.path.exists(file):
         break
 
-    print(
-        "File not found. Try again."
-    )
-df = pd.read_csv(file)
+    print("❌ File not found. Try again.")
+
+
+try:
+    df = pd.read_csv(file)
+
+except Exception as e:
+    print(f"\nError reading CSV: {e}")
+    exit()
+
 
 before = len(df)
 
-# duplicate sil
+print("\nCleaning started...\n")
+
+
+# Duplicate temizle
+duplicates = df.duplicated().sum()
 df = df.drop_duplicates()
 
-# boş yaş
-df["Age"] = df["Age"].fillna("Unknown")
 
-# boş email
-df["Email"] = df["Email"].fillna("missing@email.com")
+# Sütun kontrolü
+if "Age" in df.columns:
+    df["Age"] = df["Age"].fillna("Unknown")
 
-# isim düzelt
-df["Name"] = df["Name"].str.title()
+if "Email" in df.columns:
+    df["Email"] = (
+        df["Email"]
+        .fillna("missing@email.com")
+        .astype(str)
+        .str.lower()
+    )
 
-# ülke düzelt
-df["Country"] = df["Country"].str.title()
+if "Name" in df.columns:
+    df["Name"] = (
+        df["Name"]
+        .astype(str)
+        .str.strip()
+        .str.title()
+    )
+
+if "Country" in df.columns:
+    df["Country"] = (
+        df["Country"]
+        .astype(str)
+        .str.strip()
+        .str.title()
+    )
+
 
 after = len(df)
 
+
+# Çıkış dosyası
+output_file = "cleaned_" + os.path.basename(file)
+
 df.to_csv(
-  output_file = "cleaned_" + file  df.to_csv(
     output_file,
     index=False
 )
 
+
+# Rapor
 report = f"""
-Rows before: {before}
-Rows after: {after}
-Removed: {before-after}
+CSV CLEAN REPORT
+================
+
+Input File:
+{file}
+
+Output File:
+{output_file}
+
+Rows Before:
+{before}
+
+Rows After:
+{after}
+
+Duplicates Removed:
+{duplicates}
+
+Success:
+YES
 """
+
 
 with open(
     "report.txt",
-    "w"
+    "w",
+    encoding="utf-8"
 ) as f:
     f.write(report)
 
-print("CSV cleaned successfully!")
-print("Report generated.")
-print("Saved:")
-print("- cleaned_customers.csv")
-print("- report.txt")
-print()
-print("Summary:")
-print(f"Rows before: {before}")
-print(f"Rows after: {after}")
-print(f"Removed: {before-after}")
+
+print("\nSUCCESS")
+print("-" * 20)
+
+print(f"Input: {file}")
+print(f"Output: {output_file}")
+print(f"Rows Before: {before}")
+print(f"Rows After: {after}")
+print(f"Duplicates Removed: {duplicates}")
+
+print("\nFiles created:")
+print(f"✔ {output_file}")
+print("✔ report.txt")

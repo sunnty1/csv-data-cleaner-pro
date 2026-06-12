@@ -1,4 +1,21 @@
 
-Rows before: 5
-Rows after: 4
-Removed: 1
+CSV CLEAN REPORT
+================
+
+Input File:
+dirty_customers.csv
+
+Output File:
+cleaned_dirty_customers.csv
+
+Rows Before:
+5
+
+Rows After:
+4
+
+Duplicates Removed:
+1
+
+Success:
+YES
